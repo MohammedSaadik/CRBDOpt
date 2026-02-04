@@ -1,0 +1,4 @@
+firebase-admin
+numpy
+python-dotenv
+googlemaps
