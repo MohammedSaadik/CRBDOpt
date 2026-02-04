@@ -1,5 +1,8 @@
 import math
 
+# Tortuosity Factor for Urban Areas (Colombo estimate)
+TORTUOSITY_FACTOR = 1.4
+
 def haversine_distance(coord1, coord2):
     """
     Calculate the great circle distance between two points 
@@ -25,7 +28,7 @@ def haversine_distance(coord1, coord2):
     a = math.sin(dlat/2)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon/2)**2
     c = 2 * math.asin(math.sqrt(a)) 
     r = 6371 # Radius of earth in kilometers. Use 3956 for miles
-    return c * r
+    return c * r * TORTUOSITY_FACTOR
 
 def calculate_detour(commuter_route, pickup, dropoff):
     """

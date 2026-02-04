@@ -2,6 +2,10 @@ const { db } = require('../config/firebase');
 const fs = require('fs');
 const path = require('path');
 
+const generateId = (prefix, index) => {
+    return `${prefix}${String(index + 1)}`;
+};
+
 const seedData = async () => {
     try {
         const dataPath = path.join(__dirname, '../../../crbd_opti_data.json');
@@ -21,8 +25,8 @@ const seedData = async () => {
 
             if (snapshot.empty) {
                 const batch = db.batch();
-                data.commuters.forEach(commuter => {
-                    const docRef = commutersRef.doc(); // Auto-generate ID or use unique field
+                data.commuters.forEach((commuter, index) => {
+                    const docRef = commutersRef.doc(generateId('c', index)); // Auto-generate ID or use unique field
                     batch.set(docRef, commuter);
                 });
                 await batch.commit();
@@ -39,8 +43,8 @@ const seedData = async () => {
 
             if (snapshot.empty) {
                 const batch = db.batch();
-                data.delivery_requests.forEach(request => {
-                    const docRef = deliveriesRef.doc();
+                data.delivery_requests.forEach((request, index) => {
+                    const docRef = deliveriesRef.doc(generateId('D', index));
                     batch.set(docRef, request);
                 });
                 await batch.commit();
