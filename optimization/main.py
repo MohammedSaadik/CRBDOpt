@@ -37,7 +37,7 @@ def main():
         return
 
     # 2. Heuristic Filter & GA Execution
-    # The requirement says: "Step 1 - Heuristic Filter ... Step 2 - Run GA: Pass these candidates to GeneticMatcher"
+    # "Step 1 - Heuristic Filter ... Step 2 - Run GA: Pass these candidates to GeneticMatcher"
     # The GA class expects a list of deliveries and a pool of commuters. 
     # To strictly follow "pass these candidates", we could create a GA instance per delivery (if 1-to-1) or 
     # pass a filtered list of ALL potential commuters for the batch.
@@ -56,11 +56,11 @@ def main():
         for d in deliveries:
             dist = haversine_distance(c['route']['start'], d['pickup']) # Checking distance from Commuter Start to Pickup? 
             # Or usually candidates are filtered by if their route passes near pickup?
-            # Prompt says: "valid_candidates (commuters who pass within 5km of the pickup)"
+            #"valid_candidates (commuters who pass within 5km of the pickup)"
             # That implies checking the route. But 'haversine_distance(c['route']['start'], d['pickup'])' checks start point.
             # For simplicity and "Heuristic Filter" as typically defined in this context:
             # We often check if Commuter Start is near Pickup OR if the Pickup is within a bounding box. 
-            # Prompt just says "pass within 5km". 
+            # "pass within 5km". 
             # Let's check distance from Commuter Start to Pickup for now as a simple proxy, 
             # OR better: check distance from pickup to the line segment start-end? 
             # "pass within" implies proximity to the route.
