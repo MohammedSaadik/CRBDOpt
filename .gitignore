@@ -1,0 +1,58 @@
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+
+# Builds
+dist/
+build/
+.next/
+out/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+env.bak/
+venv.bak/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Environment Variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*
+
+# Secrets and Keys (CRITICAL)
+serviceAccountKey.json
+*.pem
+*.key
+*.cert
+*.crt
+
+# Firebase
+.firebase/
+firebase-debug.log
+
+# IDE and OS
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Data backups and dumps
+crbd_opti_data.json
+*.json.bak
+*.csv
+*.sqlite3
