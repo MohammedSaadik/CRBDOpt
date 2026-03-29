@@ -8,7 +8,7 @@ def haversine_distance(coord1, coord2):
     Calculate the great circle distance between two points 
     on the earth (specified in decimal degrees)
     coord1, coord2: dict with 'lat', 'lng' or 'latitude', 'longitude' keys
-    Returns distance in km.
+    Returns pure physical radius distance in km.
     """
     # Normalize keys
     lat1 = coord1.get('lat') or coord1.get('latitude')
@@ -27,19 +27,21 @@ def haversine_distance(coord1, coord2):
     dlat = lat2 - lat1 
     a = math.sin(dlat/2)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon/2)**2
     c = 2 * math.asin(math.sqrt(a)) 
-    r = 6371 # Radius of earth in kilometers. Use 3956 for miles
-    return c * r * TORTUOSITY_FACTOR
+    r = 6371 # Radius of earth in kilometers.
+    return c * r
 
-def calculate_detour(commuter_route, pickup, dropoff):
+def calculate_true_detour(commuter_route, pickup, dropoff):
     """
-    Calculates the extra km added to a trip.
+    Calculates the exact extra km required using the TORTUOSITY_FACTOR
     commuter_route: dict with 'start' and 'end' coordinates.
     pickup: coordinates of pickup location
     dropoff: coordinates of dropoff location
     
-    Original route: Start -> End
-    New route: Start -> Pickup -> Dropoff -> End
-    Detour = (Start->Pick + Pick->Drop + Drop->End) - (Start->End)
+    Formula:
+    original_dist = haversine(start, end)
+    new_dist = haversine(start, pick) + haversine(pick, drop) + haversine(drop, end)
+    raw_detour = new_dist - original_dist
+    final_detour = raw_detour * 1.4
     """
     start = commuter_route['start']
     end = commuter_route['end']
@@ -52,4 +54,12 @@ def calculate_detour(commuter_route, pickup, dropoff):
     
     new_dist = leg1 + leg2 + leg3
     
-    return new_dist - original_dist
+    raw_detour = new_dist - original_dist
+    
+    # Optional logic: Handle tiny floats going negative due to precision
+    if raw_detour < 0:
+        raw_detour = 0
+        
+    final_detour = raw_detour * TORTUOSITY_FACTOR
+    
+    return final_detour

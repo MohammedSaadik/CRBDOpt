@@ -1,6 +1,6 @@
 import random
 import numpy as np
-from utils import calculate_detour, haversine_distance
+from utils import calculate_true_detour, haversine_distance
 
 class GeneticMatcher:
     def __init__(self, deliveries, commuters, population_size=50, generations=100, mutation_rate=0.1):
@@ -26,7 +26,7 @@ class GeneticMatcher:
                 # Randomly assign a commuter from the available list
                 # Note: This simple version assumes any commuter can take any delivery
                 # In main.py we filter by radius, so 'commuters' passed here are valid candidates?
-                # Actually, the requirement says "Genome: A list of integers where index=RequestID and value=CommuterID."
+                # Actually, the "Genome: A list of integers where index=RequestID and value=CommuterID."
                 # But filter happens per delivery. So not all commuters are valid for all deliveries.
                 # To simplify for the "Core Engine" task:
                 # We will assume 'commuters' passed to this class are the POOL of all candidates available for these deliveries.
@@ -51,22 +51,13 @@ class GeneticMatcher:
             delivery = self.deliveries[i]
             commuter = self.commuters[commuter_idx]
             
-            # 1. Calculate Detour
-            detour = calculate_detour(commuter['route'], delivery['pickup'], delivery['dropoff'])
+            # 1. Calculate True Detour
+            detour = calculate_true_detour(commuter['route'], delivery['pickup'], delivery['dropoff'])
             
             # 2. Check Constraints
-            # Calculate original route distance for percentage check
-            start = commuter['route']['start']
-            end = commuter['route']['end']
-            original_dist = haversine_distance(start, end)
-            
-            # Avoid division by zero
-            if original_dist == 0: original_dist = 0.001
-                
-            detour_percentage = (detour / original_dist) * 100
-            
-            if detour_percentage > 15:
-                penalty += 500 # Massive penalty for >15% detour
+            tolerance = float(commuter.get('detourTolerance', 5))
+            if detour > tolerance:
+                penalty += 9999 # Massive penalty for exceeding user-defined tolerance limit
             
             total_detour += detour
 
@@ -134,7 +125,7 @@ class GeneticMatcher:
             if commuter_idx != -1:
                 delivery = self.deliveries[i]
                 commuter = self.commuters[commuter_idx]
-                detour = calculate_detour(commuter['route'], delivery['pickup'], delivery['dropoff'])
+                detour = calculate_true_detour(commuter['route'], delivery['pickup'], delivery['dropoff'])
                 
                 # Double check specific validity here if needed, but GA should have filtered bad ones via penalty
                 matches.append({

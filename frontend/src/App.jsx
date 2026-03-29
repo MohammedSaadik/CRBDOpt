@@ -9,6 +9,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import CommuterDashboard from './pages/CommuterDashboard';
 import ShopDashboard from './pages/ShopDashboard';
+import AdminDashboard from './pages/AdminDashboard'; // Import Admin Dashboard
 
 // Protected Route Component
 const ProtectedRoute = ({ children, allowedRoles }) => {
@@ -68,6 +69,8 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
       return <Navigate to="/commuter-dashboard" replace />;
     } else if (userRole === 'Shop Owner') {
       return <Navigate to="/shop-dashboard" replace />;
+    } else if (userRole === 'Admin') {
+      return <Navigate to="/admin-dashboard" replace />;
     } else {
       // Unknown role, force login again
       auth.signOut();
@@ -102,6 +105,15 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={['Shop Owner']}>
                 <ShopDashboard />
+              </ProtectedRoute>
+            } 
+          />
+
+          <Route 
+            path="/admin-dashboard" 
+            element={
+              <ProtectedRoute allowedRoles={['Admin']}>
+                <AdminDashboard />
               </ProtectedRoute>
             } 
           />
