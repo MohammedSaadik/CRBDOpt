@@ -52,11 +52,11 @@ def write_to_firestore(delivery_data):
 
 def run_stress_test(num_requests=100, max_workers=20):
     """Executes the asynchronous load test across concurrent thread pools."""
-    print(f"\n🚀 [LOAD TEST INITIALIZED] - Spawning {num_requests} concurrent simulated deliveries...")
+    print(f"\n [LOAD TEST INITIALIZED] - Spawning {num_requests} concurrent simulated deliveries...")
     
     start_time = time.time()
     start_timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
-    print(f"⏱️ Start Time: {start_timestamp}")
+    print(f"Start Time: {start_timestamp}")
 
     # Generate documents
     documents = [create_mock_delivery(i) for i in range(1, num_requests + 1)]
@@ -75,9 +75,9 @@ def run_stress_test(num_requests=100, max_workers=20):
     end_time = time.time()
     end_timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
     
-    print(f"\n✅ [LOAD TEST COMPLETED]")
-    print(f"⏱️ End Time: {end_timestamp}")
-    print(f"📊 Summary:")
+    print(f"\n [LOAD TEST COMPLETED]")
+    print(f" End Time: {end_timestamp}")
+    print(f" Summary:")
     print(f"  - Total Requests Sent: {num_requests}")
     print(f"  - Successful Writes: {success_count}")
     print(f"  - Total Execution Time: {(end_time - start_time):.2f} seconds")
